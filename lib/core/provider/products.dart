@@ -8,12 +8,18 @@ import 'dart:convert' as convert;
 class ProductProvider extends ChangeNotifier {
   ProductProvider(apiService) : _apiService = apiService;
 
-  APIServiceClass _apiService;
-  final _products = LinkedHashMap<int, ProductModel>();
-  final _productsSearchItems = LinkedHashMap<int, ProductModel>();
+  final APIServiceClass _apiService;
+  final _products = <int, ProductModel>{};
+  final _productsSearchItems = <int, ProductModel>{};
+  final _productsByCategory = <int, ProductModel>{};
+  List<String> productCategoryList = [];
 
   List<ProductModel> get productList {
     return _products.values.toList();
+  }
+
+  List<ProductModel> get producstListByCategory {
+    return _productsByCategory.values.toList();
   }
 
   List<ProductModel> get productSearchList {
@@ -64,6 +70,37 @@ class ProductProvider extends ChangeNotifier {
     var data = convert.jsonDecode(result.body);
     var product = ProductModel.fromJson(data);
     _products[product.id] = product;
+    notifyListeners();
+    return result;
+  }
+
+  Future getProductCategoris() async {
+    var result = await _apiService.get(
+      "/products/categories",
+    );
+    var data = convert.jsonDecode(result.body);
+    if (data != null) {
+      data.forEach((cD) {
+        productCategoryList.add(cD);
+      });
+    }
+    notifyListeners();
+    return result;
+  }
+
+  Future getProductsByCategory(String category) async {
+    _productsByCategory.clear();
+    var result = await _apiService.get(
+      "/products/category/$category",
+    );
+    var data = convert.jsonDecode(result.body);
+    var apiProductData = data["products"];
+    apiProductData.forEach((element) {
+      var product = ProductModel.fromJson(element);
+      _productsByCategory[product.id] = product;
+      _products[product.id] = product;
+      _productsSearchItems[product.id] = product;
+    });
     notifyListeners();
     return result;
   }

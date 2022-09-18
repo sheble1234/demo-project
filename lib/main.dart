@@ -1,4 +1,5 @@
 import 'package:demo_ecom/core/common/custom_card.dart';
+import 'package:demo_ecom/core/provider/cart.dart';
 import 'package:demo_ecom/core/provider/products.dart';
 import 'package:demo_ecom/core/screen/home/home_page.dart';
 import 'package:demo_ecom/utils/api_service.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider(api)),
+        ChangeNotifierProvider(create: (_) => CartProvider(api)),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

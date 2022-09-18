@@ -29,7 +29,7 @@ class _ProductdetailsState extends State<Productdetails> {
       appBar: AppBar(
         title: const Text(
           "Product Details",
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 20, color: Colors.black),
         ),
         centerTitle: true,
       ),

@@ -1,28 +1,25 @@
-import 'package:demo_ecom/core/model/products.dart';
-import 'package:demo_ecom/core/provider/cart.dart';
 import 'package:demo_ecom/core/provider/products.dart';
-import 'package:demo_ecom/core/screen/home/cart.dart';
 import 'package:demo_ecom/core/screen/home/product_details.dart';
-import 'package:demo_ecom/core/screen/home/product_search_delegeate.dart';
-import 'package:demo_ecom/core/screen/home/products_by_category.dart';
 import 'package:demo_ecom/utils/constant/constant.dart';
 import 'package:demo_ecom/utils/services/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class ProductsByCategory extends StatefulWidget {
+  final String categoryName;
+  const ProductsByCategory({Key? key, required this.categoryName})
+      : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ProductsByCategory> createState() => _ProductsByCategoryState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ProductsByCategoryState extends State<ProductsByCategory> {
   @override
   void initState() {
     // TODO: implement initState
-    Provider.of<ProductProvider>(context, listen: false).getProductData();
-    Provider.of<ProductProvider>(context, listen: false).getProductCategoris();
+    Provider.of<ProductProvider>(context, listen: false)
+        .getProductsByCategory(widget.categoryName);
     super.initState();
   }
 
@@ -31,33 +28,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<ProductProvider>(context);
-    final cartData = Provider.of<CartProvider>(context);
 
-    var productList = productData.productList;
+    var productList = productData.producstListByCategory;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "E-Com",
+          widget.categoryName,
           style: CustomTextStyle().homeTitleStyle,
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_basket),
-            onPressed: () async {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CartDetailsPage()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () async {
-              final product = await showSearch<ProductModel>(
-                context: context,
-                delegate: ProductSearchDelegate(),
-              );
-            },
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,31 +66,6 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: CustomSpacing.medium,
           ),
-          SizedBox(
-            height: 80,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                for (int i = 0; i < productData.productCategoryList.length; i++)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProductsByCategory(
-                                      categoryName:
-                                          productData.productCategoryList[i])));
-                        },
-                        child: Text(productData.productCategoryList[i])),
-                  )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: CustomSpacing.medium,
-          ),
           isListView
               ? Expanded(
                   child: ListView.builder(
@@ -136,62 +89,44 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.blue.shade200,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Column(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        OutlinedButton.icon(
-                                            onPressed: () {
-                                              cartData
-                                                  .addItemIntoCart(
-                                                      productList[index].id)
-                                                  .then((value) {});
-                                            },
-                                            icon: const Icon(Icons.add),
-                                            label: const Text("Add"))
-                                      ],
+                                    CircleAvatar(
+                                      backgroundColor: Colors.grey.shade100,
+                                      child: ClipOval(
+                                          child: Image.network(
+                                        productList[index].thumbnail == ""
+                                            ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482930.jpg"
+                                            : productList[index].thumbnail,
+                                        fit: BoxFit.fill,
+                                        height: 100,
+                                        width: 100,
+                                      )),
+                                      radius: 45,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        CircleAvatar(
-                                          backgroundColor: Colors.grey.shade100,
-                                          child: ClipOval(
-                                              child: Image.network(
-                                            productList[index].thumbnail == ""
-                                                ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482930.jpg"
-                                                : productList[index].thumbnail,
-                                            fit: BoxFit.fill,
-                                            height: 100,
-                                            width: 100,
-                                          )),
-                                          radius: 45,
+                                        SizedBox(
+                                          width: 250,
+                                          child: Text(
+                                            "Product Name:  ${productList[index].title}",
+                                            maxLines: 2,
+                                          ),
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: 250,
-                                              child: Text(
-                                                "Product Name:  ${productList[index].title}",
-                                                maxLines: 2,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 200,
-                                              child: Text(
-                                                "Price: ${productList[index].price}",
-                                              ),
-                                            ),
-                                            Text(
-                                                "Product Rating : ${productList[index].rating}"),
-                                          ],
-                                        )
+                                        SizedBox(
+                                          width: 200,
+                                          child: Text(
+                                            "Price: ${productList[index].price}",
+                                          ),
+                                        ),
+                                        Text(
+                                            "Product Rating : ${productList[index].rating}"),
                                       ],
-                                    ),
+                                    )
                                   ],
                                 ),
                               )),
