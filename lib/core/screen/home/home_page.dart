@@ -139,19 +139,96 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        OutlinedButton.icon(
-                                            onPressed: () {
-                                              cartData
-                                                  .addItemIntoCart(
-                                                      productList[index].id)
-                                                  .then((value) {});
-                                            },
-                                            icon: const Icon(Icons.add),
-                                            label: const Text("Add"))
+                                        productList[index].isInCart
+                                            ? IconButton(
+                                                onPressed: productList[index]
+                                                            .qty <=
+                                                        1
+                                                    ? () {
+                                                        cartData
+                                                            .removeItemIntoCart(
+                                                                productList[
+                                                                        index]
+                                                                    .id,
+                                                                true)
+                                                            .then((value) {
+                                                          productData
+                                                              .removeItemInCart(
+                                                                  productList[
+                                                                          index]
+                                                                      .id,
+                                                                  false);
+                                                        });
+                                                      }
+                                                    : () {
+                                                        productData.decreaseQty(
+                                                            productList[index]
+                                                                .id);
+                                                      },
+                                                icon: Icon(Icons.minimize))
+                                            : Container(),
+                                        Text("Qty: ${productList[index].qty}"),
+                                        productList[index].isInCart
+                                            ? IconButton(
+                                                onPressed: () {
+                                                  productData.increaseQty(
+                                                      productList[index].id);
+                                                },
+                                                icon: Icon(Icons.add))
+                                            : Container(),
                                       ],
                                     ),
+                                    productList[index].isInCart
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              OutlinedButton.icon(
+                                                  onPressed: () {
+                                                    cartData
+                                                        .removeItemIntoCart(
+                                                            productList[index]
+                                                                .id,
+                                                            true)
+                                                        .then((value) {
+                                                      productData
+                                                          .removeItemInCart(
+                                                              productList[index]
+                                                                  .id,
+                                                              false);
+                                                    });
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.minimize),
+                                                  label: const Text("Remove"))
+                                            ],
+                                          )
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              OutlinedButton.icon(
+                                                  onPressed: () {
+                                                    cartData
+                                                        .addItemIntoCart(
+                                                            productList[index]
+                                                                .id,
+                                                            true)
+                                                        .then((value) {
+                                                      productData.addItemInCart(
+                                                          productId:
+                                                              productList[index]
+                                                                  .id,
+                                                          isInCart: true);
+                                                    });
+                                                  },
+                                                  icon: const Icon(Icons.add),
+                                                  label: const Text("Add"))
+                                            ],
+                                          ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,

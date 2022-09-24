@@ -11,6 +11,8 @@ class ProductModel {
     this.category = '',
     this.thumbnail = '',
     this.images,
+    this.isInCart = false,
+    this.qty = 0.0,
   });
 
   int id;
@@ -23,6 +25,8 @@ class ProductModel {
   String brand;
   String category;
   String thumbnail;
+  bool isInCart;
+  double qty;
   List<String>? images;
 
   ProductModel copyWith({
@@ -37,6 +41,7 @@ class ProductModel {
     String? category,
     String? thumbnail,
     List<String>? images,
+    bool? isInCart,
   }) =>
       ProductModel(
         id: id ?? this.id,
@@ -50,6 +55,7 @@ class ProductModel {
         category: category ?? this.category,
         thumbnail: thumbnail ?? this.thumbnail,
         images: images ?? this.images,
+        isInCart: isInCart ?? this.isInCart,
       );
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -84,5 +90,6 @@ class ProductModel {
         "thumbnail": thumbnail == null ? null : thumbnail,
         "images":
             images == null ? null : List<dynamic>.from(images!.map((x) => x)),
+        "isInCart": isInCart == null ? null : isInCart
       };
 }

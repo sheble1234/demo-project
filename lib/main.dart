@@ -18,10 +18,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final ProductProvider productProvider = ProductProvider(api);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider(api)),
-        ChangeNotifierProvider(create: (_) => CartProvider(api)),
+        ChangeNotifierProvider(
+            create: (_) => CartProvider(api, productProvider)),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

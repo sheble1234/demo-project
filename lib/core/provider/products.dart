@@ -62,6 +62,31 @@ class ProductProvider extends ChangeNotifier {
     return productSearchList;
   }
 
+  void addItemInCart({required int productId, required bool isInCart}) {
+    _products[productId]!.isInCart = isInCart;
+    _products[productId]!.qty = 1;
+    notifyListeners();
+  }
+
+  void removeItemInCart(
+    int productId,
+    bool isInCart,
+  ) {
+    _products[productId]!.isInCart = isInCart;
+    _products[productId]!.qty = 0;
+    notifyListeners();
+  }
+
+  void increaseQty(int productId) {
+    _products[productId]!.qty++;
+    notifyListeners();
+  }
+
+  void decreaseQty(int productId) {
+    _products[productId]!.qty--;
+    notifyListeners();
+  }
+
   Future getProductByIdFromAPI(int productId) async {
     var result = await _apiService.get(
       "/products/$productId",
