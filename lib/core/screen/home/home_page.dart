@@ -1,10 +1,12 @@
 import 'package:demo_ecom/core/model/products.dart';
 import 'package:demo_ecom/core/provider/cart.dart';
 import 'package:demo_ecom/core/provider/products.dart';
-import 'package:demo_ecom/core/screen/home/cart.dart';
+import 'package:demo_ecom/core/screen/cart.dart';
+import 'package:demo_ecom/core/screen/home/product_category_view.dart';
 import 'package:demo_ecom/core/screen/home/product_details.dart';
+import 'package:demo_ecom/core/screen/home/product_list_view_card.dart';
 import 'package:demo_ecom/core/screen/home/product_search_delegeate.dart';
-import 'package:demo_ecom/core/screen/home/products_by_category.dart';
+import 'package:demo_ecom/core/screen/products_by_category.dart';
 import 'package:demo_ecom/utils/constant/constant.dart';
 import 'package:demo_ecom/utils/services/theme.dart';
 import 'package:flutter/material.dart';
@@ -89,23 +91,21 @@ class _HomePageState extends State<HomePage> {
             height: CustomSpacing.medium,
           ),
           SizedBox(
-            height: 80,
+            height: 50,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
                 for (int i = 0; i < productData.productCategoryList.length; i++)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProductsByCategory(
-                                      categoryName:
-                                          productData.productCategoryList[i])));
-                        },
-                        child: Text(productData.productCategoryList[i])),
+                  ProductCategoryView(
+                    categoryName: productData.productCategoryList[i],
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductsByCategory(
+                                  categoryName:
+                                      productData.productCategoryList[i])));
+                    },
                   )
               ],
             ),
@@ -118,162 +118,15 @@ class _HomePageState extends State<HomePage> {
                   child: ListView.builder(
                     itemCount: productList.length,
                     itemBuilder: (context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Productdetails(
-                                      productId: productList[index].id)));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                              elevation: 10,
-                              shadowColor: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16)),
-                              color: Colors.blue.shade200,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        productList[index].isInCart
-                                            ? IconButton(
-                                                onPressed: productList[index]
-                                                            .qty <=
-                                                        1
-                                                    ? () {
-                                                        cartData
-                                                            .removeItemIntoCart(
-                                                                productList[
-                                                                        index]
-                                                                    .id,
-                                                                true)
-                                                            .then((value) {
-                                                          productData
-                                                              .removeItemInCart(
-                                                                  productList[
-                                                                          index]
-                                                                      .id,
-                                                                  false);
-                                                        });
-                                                      }
-                                                    : () {
-                                                        productData.decreaseQty(
-                                                            productList[index]
-                                                                .id);
-                                                      },
-                                                icon: Icon(Icons.minimize))
-                                            : Container(),
-                                        Text("Qty: ${productList[index].qty}"),
-                                        productList[index].isInCart
-                                            ? IconButton(
-                                                onPressed: () {
-                                                  productData.increaseQty(
-                                                      productList[index].id);
-                                                },
-                                                icon: Icon(Icons.add))
-                                            : Container(),
-                                      ],
-                                    ),
-                                    productList[index].isInCart
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              OutlinedButton.icon(
-                                                  onPressed: () {
-                                                    cartData
-                                                        .removeItemIntoCart(
-                                                            productList[index]
-                                                                .id,
-                                                            true)
-                                                        .then((value) {
-                                                      productData
-                                                          .removeItemInCart(
-                                                              productList[index]
-                                                                  .id,
-                                                              false);
-                                                    });
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.minimize),
-                                                  label: const Text("Remove"))
-                                            ],
-                                          )
-                                        : Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              OutlinedButton.icon(
-                                                  onPressed: () {
-                                                    cartData
-                                                        .addItemIntoCart(
-                                                            productList[index]
-                                                                .id,
-                                                            true)
-                                                        .then((value) {
-                                                      productData.addItemInCart(
-                                                          productId:
-                                                              productList[index]
-                                                                  .id,
-                                                          isInCart: true);
-                                                    });
-                                                  },
-                                                  icon: const Icon(Icons.add),
-                                                  label: const Text("Add"))
-                                            ],
-                                          ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundColor: Colors.grey.shade100,
-                                          child: ClipOval(
-                                              child: Image.network(
-                                            productList[index].thumbnail == ""
-                                                ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482930.jpg"
-                                                : productList[index].thumbnail,
-                                            fit: BoxFit.fill,
-                                            height: 100,
-                                            width: 100,
-                                          )),
-                                          radius: 45,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: 250,
-                                              child: Text(
-                                                "Product Name:  ${productList[index].title}",
-                                                maxLines: 2,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 200,
-                                              child: Text(
-                                                "Price: ${productList[index].price}",
-                                              ),
-                                            ),
-                                            Text(
-                                                "Product Rating : ${productList[index].rating}"),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ),
-                      );
+                      return ProductListViewCard(
+                          productModel: productList[index],
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Productdetails(
+                                        productId: productList[index].id)));
+                          });
                     },
                   ),
                 )

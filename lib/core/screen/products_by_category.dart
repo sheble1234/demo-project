@@ -1,5 +1,6 @@
 import 'package:demo_ecom/core/provider/products.dart';
 import 'package:demo_ecom/core/screen/home/product_details.dart';
+import 'package:demo_ecom/core/screen/home/product_list_view_card.dart';
 import 'package:demo_ecom/utils/constant/constant.dart';
 import 'package:demo_ecom/utils/services/theme.dart';
 import 'package:flutter/material.dart';
@@ -71,67 +72,15 @@ class _ProductsByCategoryState extends State<ProductsByCategory> {
                   child: ListView.builder(
                     itemCount: productList.length,
                     itemBuilder: (context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Productdetails(
-                                      productId: productList[index].id)));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                              elevation: 10,
-                              shadowColor: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16)),
-                              color: Colors.blue.shade200,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.grey.shade100,
-                                      child: ClipOval(
-                                          child: Image.network(
-                                        productList[index].thumbnail == ""
-                                            ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482930.jpg"
-                                            : productList[index].thumbnail,
-                                        fit: BoxFit.fill,
-                                        height: 100,
-                                        width: 100,
-                                      )),
-                                      radius: 45,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: 250,
-                                          child: Text(
-                                            "Product Name:  ${productList[index].title}",
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 200,
-                                          child: Text(
-                                            "Price: ${productList[index].price}",
-                                          ),
-                                        ),
-                                        Text(
-                                            "Product Rating : ${productList[index].rating}"),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )),
-                        ),
-                      );
+                      return ProductListViewCard(
+                          productModel: productList[index],
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Productdetails(
+                                        productId: productList[index].id)));
+                          });
                     },
                   ),
                 )
