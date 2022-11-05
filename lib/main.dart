@@ -1,4 +1,5 @@
 import 'package:demo_ecom/core/common/custom_card.dart';
+import 'package:demo_ecom/core/provider/auth.dart';
 import 'package:demo_ecom/core/provider/cart.dart';
 import 'package:demo_ecom/core/provider/products.dart';
 import 'package:demo_ecom/core/screen/home/home_page.dart';
@@ -6,6 +7,8 @@ import 'package:demo_ecom/utils/api_service.dart';
 import 'package:demo_ecom/utils/services/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'core/screen/bottom_navigator.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,11 +27,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductProvider(api)),
         ChangeNotifierProvider(
             create: (_) => CartProvider(api, productProvider)),
+        ChangeNotifierProvider(create: (_) => AuthProvider(api)),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: customTheme,
-        home: const HomePage(),
+        home: BottomNavBar(),
       ),
     );
   }

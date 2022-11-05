@@ -1,4 +1,5 @@
 import 'package:demo_ecom/core/model/products.dart';
+import 'package:demo_ecom/core/provider/auth.dart';
 import 'package:demo_ecom/core/provider/cart.dart';
 import 'package:demo_ecom/core/provider/products.dart';
 import 'package:demo_ecom/core/screen/cart.dart';
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     Provider.of<ProductProvider>(context, listen: false).getProductData();
     Provider.of<ProductProvider>(context, listen: false).getProductCategoris();
+    Provider.of<AuthProvider>(context, listen: false).loadUser();
     super.initState();
   }
 

@@ -1,6 +1,9 @@
 import 'package:demo_ecom/core/model/products.dart';
+import 'package:demo_ecom/core/provider/auth.dart';
 import 'package:demo_ecom/core/provider/cart.dart';
 import 'package:demo_ecom/core/provider/products.dart';
+import 'package:demo_ecom/core/screen/bottom_navigator.dart';
+import 'package:demo_ecom/core/screen/profile/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,18 +16,13 @@ class CartDetailsPage extends StatefulWidget {
 }
 
 class _CartDetailsPageState extends State<CartDetailsPage> {
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   Provider.of<ProductProvider>(context, listen: false)
-  //       .getProductByIdFromAPI(widget.productId);
-  //   super.initState();
-  // }
   final List<ProductModel> _itemOnCart = [];
   @override
   Widget build(BuildContext context) {
     final carts = Provider.of<CartProvider>(context);
     final products = Provider.of<ProductProvider>(context);
+    final authData = Provider.of<AuthProvider>(context);
+
     products.productList.forEach((product) {
       carts.productsOnCart.forEach((element) {
         if (product.id == element.id) {
@@ -40,6 +38,15 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
             style: TextStyle(fontSize: 20, color: Colors.black),
           ),
           centerTitle: true,
+        ),
+        floatingActionButton: FloatingActionButton.small(
+          onPressed: () {
+            authData.userToken != ''
+                ? print("Userlogin you can go")
+                : Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+          },
+          child: Icon(Icons.money_rounded),
         ),
         body: ListView.builder(
             itemCount: _itemOnCart.length,
@@ -98,45 +105,3 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
             }));
   }
 }
-
-
-//  Column(
-//         children: [
-//           SizedBox(
-//             height: 250,
-//             child: Image.network(product.thumbnail),
-//           ),
-//           Column(
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.all(8.0),
-//                 child: Card(
-//                   color: Colors.blue,
-//                   elevation: 10,
-//                   shadowColor: Colors.yellow,
-//                   shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(16)),
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(8.0),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Text("Product ID: ${product.id}"),
-//                             Text("Product Name: ${product.title}"),
-//                             Text("Price: ${product.price}"),
-//                             Text("Discount: ${product.discountPercentage}"),
-//                             Text("Rating: ${product.rating}"),
-//                           ],
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
