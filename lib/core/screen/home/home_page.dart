@@ -35,8 +35,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<ProductProvider>(context);
-    final cartData = Provider.of<CartProvider>(context);
-
     var productList = productData.productList;
     return Scaffold(
       appBar: AppBar(

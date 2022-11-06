@@ -59,6 +59,7 @@ class AuthProvider extends ChangeNotifier {
       _prefs.setString("userEmail", data["email"]);
       _prefs.setString("userImage", data["image"]);
       _prefs.setString("userGender", data["gender"]);
+      _prefs.setInt("userId", data["id"]);
       loadUser();
     }
     return result;

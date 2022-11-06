@@ -34,13 +34,15 @@ class ProductProvider extends ChangeNotifier {
     var result = await _apiService.get(
       "/products",
     );
-    print(result.body);
     var data = convert.jsonDecode(result.body);
     var apiProductData = data["products"];
     apiProductData.forEach((element) {
       var product = ProductModel.fromJson(element);
-      _products[product.id] = product;
-      _productsSearchItems[product.id] = product;
+      if (_products.containsKey(product.id)) {
+      } else {
+        _products[product.id] = product;
+        _productsSearchItems[product.id] = product;
+      }
     });
     notifyListeners();
     return result;
@@ -55,8 +57,11 @@ class ProductProvider extends ChangeNotifier {
     var apiProductData = data["products"];
     apiProductData.forEach((element) {
       var product = ProductModel.fromJson(element);
-      _products[product.id] = product;
-      _productsSearchItems[product.id] = product;
+      if (_products.containsKey(product.id)) {
+      } else {
+        _products[product.id] = product;
+        _productsSearchItems[product.id] = product;
+      }
     });
     notifyListeners();
     return productSearchList;
@@ -85,6 +90,10 @@ class ProductProvider extends ChangeNotifier {
   void decreaseQty(int productId) {
     _products[productId]!.qty--;
     notifyListeners();
+  }
+
+  List<ProductModel> itemOnCart() {
+    return _products.values.where((element) => element.isInCart).toList();
   }
 
   Future getProductByIdFromAPI(int productId) async {
@@ -122,11 +131,27 @@ class ProductProvider extends ChangeNotifier {
     var apiProductData = data["products"];
     apiProductData.forEach((element) {
       var product = ProductModel.fromJson(element);
-      _productsByCategory[product.id] = product;
-      _products[product.id] = product;
-      _productsSearchItems[product.id] = product;
+      if (_products.containsKey(product.id)) {
+        _productsByCategory[product.id] = product;
+        _productsByCategory.values.forEach((pC) {
+          _products.values.forEach((p) {
+            p.id == pC.id && p.isInCart ? pC.isInCart = true : false;
+            p.id == pC.id && p.isInCart ? pC.qty = p.qty : pC.qty;
+          });
+        });
+      } else {
+        _productsByCategory[product.id] = product;
+        _products[product.id] = product;
+        _productsSearchItems[product.id] = product;
+      }
     });
     notifyListeners();
     return result;
+  }
+
+  discountPrice(price, discountPercentage) {
+    var discountAmount = price * (discountPercentage / 100);
+    var dis = price - discountAmount;
+    return dis;
   }
 }

@@ -75,6 +75,11 @@ class _ProductListViewCardState extends State<ProductListViewCard> {
                                     CustomTextStyle().productBasePriceTextStyle,
                               ),
                               Text(
+                                "৳ ${productData.discountPrice(widget.productModel.price, widget.productModel.discountPercentage)}",
+                                style:
+                                    CustomTextStyle().productBasePriceTextStyle,
+                              ),
+                              Text(
                                 "☆${widget.productModel.rating}",
                                 style: CustomTextStyle().productRatingTextStyle,
                               ),
