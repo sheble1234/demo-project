@@ -3,14 +3,19 @@ import 'package:demo_ecom/core/provider/auth.dart';
 import 'package:demo_ecom/core/provider/cart.dart';
 import 'package:demo_ecom/core/provider/products.dart';
 import 'package:demo_ecom/core/screen/home/home_page.dart';
+import 'package:demo_ecom/firabase_config.dart';
 import 'package:demo_ecom/utils/api_service.dart';
 import 'package:demo_ecom/utils/services/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'core/screen/bottom_navigator.dart';
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
   runApp(MyApp());
 }
 

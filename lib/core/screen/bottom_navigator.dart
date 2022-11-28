@@ -44,24 +44,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
               FontAwesomeIcons.home,
               size: 20,
             ),
-            title: Text(
-              'Home',
-              style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
-            ),
+            label: "Home",
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.shoppingCart, size: 20),
-            title: Text(
-              'Cart',
-              style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
-            ),
+            label: "Cart",
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.solidUser, size: 20),
-            title: Text(
-              'Profile',
-              style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
-            ),
+            label: "Profile",
           ),
         ],
         currentIndex: _selectedIndex,
